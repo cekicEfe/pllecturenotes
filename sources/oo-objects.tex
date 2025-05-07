@@ -561,24 +561,25 @@ Rational & Rational::operator<(Rational &b) {...}
 Rational & Rational::operator!() {...}    
 Rational & Rational::operator++() {...}    
 Rational & Rational::operator++(int nouse) {...}    
-Rational & Rational::operator double() {...}    
+Rational::operator double() {...}    // no return type
 
 void Hash::operator=(Hash &a) {...}
 double Hash::operator[](int a) {...}
 double Hash::operator[](const char a[]) {...}
 Hash & Hash::operator()(const char a[]) {...}
+Hash & Hash::operator()(const char a[], int size) {...}
 
 double Pointer::operator*() {...}
 void * Pointer::new(size_t size) {...}
 void * Pointer::delete(void *p, size_t size) {...}
 
 Rational a,b,c; Hash h,j; Pointer p,*q;
-a+b;          a+3;      if (a<b) ... ;      !a;           
-++a;          a++;      x=(double)a;        
+a+b;    a+3;      if (a<b) ... ;  !a;           
+++a;    a++;      x=(double)a;  
 
-h=j;          x=h[3];   x=h["ali"];         i=h("a-b");
+h=j;    x=h[3];   x=h["ali"];     i=h("a-b");  i=h("a-b",1);
 
-x=*p;         q=new Pointer;            delete q;
+x=*p;   q=new Pointer;            delete q;
 \end{lstlisting}}
 \begin{frame}
 \begin{beamercolorbox}{cexample}

@@ -1,28 +1,34 @@
+SHELL=/bin/bash
+
 files  = $(wildcard *.tex)
 
 pdfs = $(files:%tex=%pdf)
 
-handouts = $(pdfs:%=ceng242-%)
+handouts = $(pdfs:%=../handouts/ceng242-%)
 
-slides = $(pdfs:%=ceng242-sl-%)
+slides = $(pdfs:%=../slides/ceng242-sl-%)
 
 
 all: $(slides) $(handouts)
 
-install: all
-	rsync -av $(slides) ../slides/ ;\
-	rsync -av $(handouts) ../handouts/
+#install: all
+#	rsync -av $(slides) ../slides/ ;\
+#	rsync -av $(handouts) ../handouts/
 
-ceng242-%.pdf : %.tex
-	-pdflatex -jobname=$(@:%.pdf=%) '\documentclass[handout,compress,xcolor=table]{beamer}\input{$<}' && \
-	pdflatex -jobname=$(@:%.pdf=%) '\documentclass[handout,compress,xcolor=table]{beamer}\input{$<}'
+../handouts/ceng242-%.pdf : %.tex
+	-pdflatex -jobname=$(@:../handouts/%.pdf=%) '\documentclass[handout,compress,xcolor=table]{beamer}\input{$<}' && \
+	pdflatex -jobname=$(@:../handouts/%.pdf=%) '\documentclass[handout,compress,xcolor=table]{beamer}\input{$<}' && \
+	mv $(@:../handouts/%=%) $(@) && \
+	rm $(@:../handouts/%.pdf=%).{aux,log,nav,out,snm,vrb,toc}
 	
-ceng242-sl-%.pdf : %.tex
-	-pdflatex -jobname=$(@:%.pdf=%) '\documentclass[slides,compress,xcolor=table]{beamer}\input{$<}' && \
-	pdflatex -jobname=$(@:%.pdf=%) '\documentclass[slides,compress,xcolor=table]{beamer}\input{$<}'
+../slides/ceng242-sl-%.pdf : %.tex
+	-pdflatex -jobname=$(@:../slides/%.pdf=%) '\documentclass[slides,compress,xcolor=table]{beamer}\input{$<}' && \
+	pdflatex -jobname=$(@:../slides/%.pdf=%) '\documentclass[slides,compress,xcolor=table]{beamer}\input{$<}' && \
+	mv $(@:../slides/%=%) $(@) && \
+	rm $(@:../slides/%.pdf=%).{aux,log,nav,out,snm,vrb,toc}
 
 clean: auxclean
-	-rm $(slides) $(handouts)
+	#-rm $(slides) $(handouts)
 
 auxclean:
 	-rm *.aux *.log *.nav *.out *.snm *.vrb *.toc
